@@ -1,8 +1,15 @@
 <template>
   <div>
     <RouterView />
-    <Toast />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { onMounted } from 'vue';
+
+
+onMounted(() => {
+   document.querySelector('html').setAttribute('data-theme', "bumblebee");
+})
+
+</script>

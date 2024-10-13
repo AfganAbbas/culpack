@@ -1,21 +1,21 @@
 import "./style.css";
-import "primeicons/primeicons.css";
 import { createApp } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 import App from "./App.vue";
 import Home from "./pages/Home.vue";
 import About from "./pages/About.vue";
+import Register from "./pages/Register.vue";
 import Login from "./pages/Login.vue";
-import ToastService from "primevue/toastservice";
-import PrimeVue from "primevue/config";
-import Aura from "@primevue/themes/aura";
-
-
+import DataForm from "./pages/DataForm.vue";
+import QrCodeReader from "./pages/QrCodeReader.vue";
 
 const routes = [
-  { path: "/", component: Home },
-  { path: "/login", component: Login },
-  { path: "/about", component: About },
+  { path: "/", name: "home", component: Home },
+  { path: "/register", name: "register", component: Register },
+  { path: "/dataform", name: "dataform", component: DataForm },
+  { path: "/login", name: "login", component: Login },
+  { path: "/about", name: "about", component: About },
+  { path: "/qr-code", name: "qrcode", component: QrCodeReader },
 ];
 
 const router = createRouter({
@@ -23,13 +23,4 @@ const router = createRouter({
   routes,
 });
 
-createApp(App)
-  .use(PrimeVue, {
-    ripple: true,
-    theme: {
-      preset: Aura,
-    },
-  })
-  .use(ToastService)
-  .use(router)
-  .mount("#app");
+createApp(App).use(router).mount("#app");

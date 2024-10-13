@@ -10,7 +10,7 @@
       @submit.prevent="submitForm"
     >
       <h6 class="text-xl text-primary text-center font-bold md:text-3xl">
-        Login
+        Register
       </h6>
       <label class="input input-bordered flex items-center gap-2">
         <svg
@@ -33,7 +33,7 @@
           placeholder="Email"
         />
       </label>
-      <!-- <label class="input input-bordered flex items-center gap-2">
+      <label class="input input-bordered flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
@@ -50,7 +50,7 @@
           v-model="formData.username"
           placeholder="Username"
         />
-      </label> -->
+      </label>
       <label class="input input-bordered flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -71,8 +71,8 @@
           v-model="formData.password"
         />
       </label>
-      <button class="btn btn-block btn-primary" type="submit">Login</button>
-      <p class="text-center">Didn't you join? <RouterLink to="/register" class="text-primary font-bold">Register</RouterLink></p>
+      <button class="btn btn-block btn-primary" type="submit">Register</button>
+      <p class="text-center">Already member? <RouterLink to="/login" class="text-primary font-bold">Log In</RouterLink></p>
     </form>
   </main>
 </template>
@@ -81,12 +81,12 @@
 import { ref } from "vue";
 
 const formData = ref({
+  username: "",
   password: "",
   email: "",
 });
 
-// NOTE: Toast notification can be added
 function submitForm() {
-  alert("Data is submited, change to toast notification");
+  alert("Data is submited");
 }
 </script>
