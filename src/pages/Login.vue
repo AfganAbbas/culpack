@@ -1,9 +1,10 @@
 <template>
   <main class="h-screen w-full flex flex-col items-center justify-center">
+    <img src="../assets/culpack.png" alt="Culpack" class="w-24 h-24 object-center scale-[2.2]">
     <h1
-      class="text-secondary underline text-center italic font-sans font-bold mb-4 text-2xl md:mb-20 md:text-5xl"
+      class="text-secondary underline text-center italic font-sans font-bold mb-4 text-xl md:mb-20 md:text-3xl"
     >
-      Ready to discover the amazing culture?
+      Experience Azerbaijan: Culture, Cuisine, and Adventure Await!
     </h1>
     <form
       class="w-full md:shadow-lg flex flex-col rounded-md p-4 gap-3 md:gap-6 md:w-4/12 md:border"
@@ -79,6 +80,10 @@
 
 <script setup>
 import { ref } from "vue";
+import { toast } from "vue3-toastify";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const formData = ref({
   password: "",
@@ -87,6 +92,9 @@ const formData = ref({
 
 // NOTE: Toast notification can be added
 function submitForm() {
-  alert("Data is submited, change to toast notification");
+  toast("Successfully logged in", { type: "success" });
+  setTimeout(() => {
+    router.push('/');
+  }, 1000);
 }
 </script>
