@@ -75,7 +75,7 @@ const quiz = {
 
 
 onMounted(async () => {
-  const response = await axios.get("http://172.16.3.105:9840/api/question/getLoginFormQuestions");
+  const response = await axios.get("https://68dc-94-20-82-242.ngrok-free.app/api/question/getLoginFormQuestions");
 })
 
 function nextStep() {

@@ -74,7 +74,7 @@ export default {
         await this.timeout(3000)
       console.log(this.result, 'result');
 
-      const response = await axios.get(`http://172.16.3.105:9840/api/artifact/${this.result}`);
+      const response = await axios.get(`https://68dc-94-20-82-242.ngrok-free.app/api/artifact/${this.result}`);
       console.log("response", response.data)
 
       // get questions
