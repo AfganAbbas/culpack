@@ -36,6 +36,7 @@
 
 <script>
 import { QrcodeStream } from "vue-qrcode-reader";
+import axios from 'axios'
 
 export default {
   components: { QrcodeStream },
@@ -76,11 +77,16 @@ export default {
       // pretend it's taking really long
         await this.timeout(3000)
       console.log(this.result, 'result');
+
+      const response = await axios.get(`http://172.16.3.105:9840/api/artifact/${this.result}`);
+      console.log("response", response.data)
+
+      // get questions
       
       this.isValid = this.result.startsWith('http')
 
       // Response output
-      this.$emit('data-load', {question: 'Hello World'})
+      this.$emit('data-load', response.data) // put questions here
 
       // some more delay, so users have time to read the message
       await this.timeout(2000)

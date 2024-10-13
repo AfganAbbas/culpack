@@ -3,7 +3,11 @@
     <div class="navbar rounded-xl border border-primary shadow-lg text-primary">
       <div class="navbar-start">
         <div class="flex-1 flex items-center pt-2">
-          <img src="../assets/culpack.png" alt="Culpack" class="w-12 h-12 object-center scale-[2.2]">
+          <img
+            src="../assets/culpack.png"
+            alt="Culpack"
+            class="w-12 h-12 object-center scale-[2.2]"
+          />
         </div>
       </div>
       <div class="navbar-center">
@@ -24,39 +28,6 @@
       </div>
       <div class="navbar-end">
         <div class="flex-none">
-          <!-- <div class="dropdown dropdown-end">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-            <div class="indicator">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-              <span class="badge badge-sm indicator-item">8</span>
-            </div>
-          </div>
-          <div
-            tabindex="0"
-            class="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-52 shadow"
-          >
-            <div class="card-body">
-              <span class="text-lg font-bold">8 Items</span>
-              <span class="text-info">Subtotal: $999</span>
-              <div class="card-actions">
-                <button class="btn btn-primary btn-block">View cart</button>
-              </div>
-            </div>
-          </div>
-        </div> -->
           <div class="dropdown dropdown-end">
             <div
               tabindex="0"
@@ -74,12 +45,7 @@
               tabindex="0"
               class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
             >
-              <li>
-                <a class="justify-between">
-                  Profile
-                  <!-- <span class="badge">New</span> -->
-                </a>
-              </li>
+              <li><a>Profile</a></li>
               <li><a>Settings</a></li>
               <li><a>Logout</a></li>
             </ul>
@@ -87,9 +53,8 @@
         </div>
       </div>
     </div>
-    <!-- The button to open modal -->
 
-    <!-- Put this part before </body> tag -->
+    <!-- The button to open modal -->
     <input
       type="checkbox"
       @change="exec"
@@ -97,6 +62,7 @@
       ref="my_modal_6"
       class="modal-toggle"
     />
+
     <div class="modal" role="dialog">
       <div class="modal-box" v-if="qrState">
         <h3 class="text-lg font-bold">Scan the QR!</h3>
@@ -105,21 +71,37 @@
           <label for="my_modal_6" class="btn">Close!</label>
         </div>
       </div>
+
+      <!-- Display the quiz question and answers -->
       <div class="modal-box w-10/12 max-w-4xl" v-else>
-        <h3 class="text-lg border border-primary rounded-md p-4 text-center font-bold">{{ quiz.questions[0].question }}</h3>
+        <h3
+          class="text-lg border border-primary rounded-md p-4 text-center font-bold"
+        >
+          {{ quiz.question }}
+        </h3>
         <div class="py-2 space-y-4">
-           <div v-for="quest in quiz.questions[0].options" class="btn h-14 flex justify-center items-center rounded-2xl shadow-md hover:scale-95">
-                <p class="text-2xl">{{ quest }}</p>
-            </div>
+          <div
+            v-for="answer in quiz.answers"
+            :key="answer.id"
+            @click="checkAnswer(answer)"
+            class="btn h-14 flex justify-center items-center rounded-2xl shadow-md hover:scale-95"
+            :class="{
+              'bg-green-500':
+                isAnswered && isCorrect && answer === selectedAnswer,
+              'bg-red-500':
+                isAnswered && !isCorrect && answer === selectedAnswer,
+            }"
+          >
+            <p class="text-2xl">{{ answer.answer }}</p>
+          </div>
         </div>
+
         <div class="modal-action">
-          <form method="dialog">
-            <!-- if there is a button, it will close the modal -->
-            <!-- <button class="btn">Close</button> -->
-          </form>
+          <form method="dialog"></form>
         </div>
       </div>
     </div>
+
     <slot />
   </main>
 </template>
@@ -127,41 +109,98 @@
 <script setup>
 import { ref } from "vue";
 import QrCodeReader from "../pages/QrCodeReader.vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+
+const qrState = ref(false);
+const quiz = ref({
+  id: "670ad928402c5e5e5b41b181",
+  question: "What is the primary material used in the Garagoyunlu kilim?",
+  artifactId: "670ad924402c5e5e5b41b179",
+  type: "ARTIFACT",
+  answers: [
+    {
+      id: "670ad928402c5e5e5b41b17e",
+      answer: "Cotton",
+      correct: false,
+    },
+    {
+      id: "670ad928402c5e5e5b41b17f",
+      answer: "Silk",
+      correct: false,
+    },
+    {
+      id: "670ad928402c5e5e5b41b180",
+      answer: "Wool",
+      correct: true,
+    },
+  ],
+});
+
+const isAnswered = ref(false); // Track if an answer was selected
+const isCorrect = ref(false); // Track if the selected answer is correct
+const selectedAnswer = ref(null); // Store the selected answer
+const feedbackMessage = ref(""); // Message to display to the user
 
 function exec(e) {
   qrState.value = e.target.checked;
 }
 
+// Function to load questions and select a random question
 function loadQuestions(data) {
   qrState.value = false;
+  if (data.questions && data.questions.length > 0) {
+    const randomIndex = Math.floor(Math.random() * data.questions.length);
+    quiz.value = data.questions[randomIndex];
+  }
 }
 
-const qrState = ref(false);
+// Function to check if the selected answer is correct
+function checkAnswer(answer) {
+  if (!isAnswered.value) {
+    selectedAnswer.value = answer;
+    isCorrect.value = answer.correct;
+    isAnswered.value = true;
+    feedbackMessage.value = answer.correct
+      ? "Correct! Great job!"
+      : "Incorrect! Try again.";
 
-const quiz = ref({
-  questions: [
-    {
-      question: "What is the capital of Australia?",
-      options: ["Sydney", "Melbourne", "Canberra", "Brisbane"]
-    },
-  ]
-});
+    // Show toast
+    if (answer.correct) {
+      toast.success(feedbackMessage.value, {
+        autoClose: 1000,
+        pauseOnHover: false,
+      });
 
-// const items = ref([
-//   {
-//     label: "Home",
-//     to: "/",
-//     icon: "pi pi-home",
-//   },
-//   {
-//     label: "About",
-//     to: "/about",
-//     icon: "pi pi-star",
-//   },
-//   {
-//     label: "Contact",
-//     icon: "pi pi-envelope",
-//     badge: 3,
-//   },
-// ]);
+      // Close modal if answer is correct
+      setTimeout(() => {
+        document.getElementById("my_modal_6").checked = false;
+        resetState(); // Reset state after modal closes
+      }, 1000);
+    } else {
+      toast.error(feedbackMessage.value);
+
+      // Reset only `isAnswered` to allow re-answering, without closing the modal
+      setTimeout(() => {
+        resetState(false); // Reset state but keep modal open
+      }, 1000);
+    }
+  }
+}
+
+// Reset function to clean up the state for both correct and incorrect answers
+function resetState(closeModal = true) {
+  isAnswered.value = false;
+  selectedAnswer.value = null;
+  isCorrect.value = false;
+  feedbackMessage.value = "";
+
+  if (closeModal) {
+    document.getElementById("my_modal_6").checked = false;
+  }
+}
 </script>
+
+<style scoped>
+/* Add any necessary styles */
+</style>
