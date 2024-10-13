@@ -79,6 +79,9 @@ export default {
       
       this.isValid = this.result.startsWith('http')
 
+      // Response output
+      this.$emit('data-load', {question: 'Hello World'})
+
       // some more delay, so users have time to read the message
       await this.timeout(2000)
       this.paused = false

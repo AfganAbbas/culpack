@@ -7,7 +7,9 @@ import About from "./pages/About.vue";
 import Register from "./pages/Register.vue";
 import Login from "./pages/Login.vue";
 import DataForm from "./pages/DataForm.vue";
-import QrCodeReader from "./pages/QrCodeReader.vue";
+import Vue3Toastify from "vue3-toastify";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
 const routes = [
   { path: "/", name: "home", component: Home },
@@ -15,7 +17,6 @@ const routes = [
   { path: "/dataform", name: "dataform", component: DataForm },
   { path: "/login", name: "login", component: Login },
   { path: "/about", name: "about", component: About },
-  { path: "/qr-code", name: "qrcode", component: QrCodeReader },
 ];
 
 const router = createRouter({
@@ -23,4 +24,9 @@ const router = createRouter({
   routes,
 });
 
-createApp(App).use(router).mount("#app");
+createApp(App)
+  .use(Vue3Toastify, {
+    position: toast.POSITION.BOTTOM_RIGHT,
+  })
+  .use(router)
+  .mount("#app");

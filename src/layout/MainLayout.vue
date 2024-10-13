@@ -2,15 +2,12 @@
   <main class="p-2">
     <div class="navbar rounded-xl border border-primary shadow-lg text-primary">
       <div class="navbar-start">
-        <div class="flex-1">
-          <a class="btn btn-ghost text-2xl">CulPack</a>
+        <div class="flex-1 flex items-center pt-2">
+          <img src="../assets/culpack.png" alt="Culpack" class="w-12 h-12 object-center scale-[2.2]">
         </div>
       </div>
       <div class="navbar-center">
-        <label
-          for="my_modal_6"
-          class="btn btn-primary btn-square p-2"
-        >
+        <label for="my_modal_6" class="btn btn-primary btn-square p-2">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path fill="currentColor" d="M1 1h10v10H1zm2 2v6h6V3z" />
             <path fill="currentColor" fill-rule="evenodd" d="M5 5h2v2H5z" />
@@ -93,13 +90,33 @@
     <!-- The button to open modal -->
 
     <!-- Put this part before </body> tag -->
-    <input type="checkbox" @change="exec" id="my_modal_6" class="modal-toggle" />
+    <input
+      type="checkbox"
+      @change="exec"
+      id="my_modal_6"
+      ref="my_modal_6"
+      class="modal-toggle"
+    />
     <div class="modal" role="dialog">
-      <div class="modal-box">
+      <div class="modal-box" v-if="qrState">
         <h3 class="text-lg font-bold">Scan the QR!</h3>
-        <QrCodeReader v-if="qrState"/>
+        <QrCodeReader @data-load="loadQuestions" />
         <div class="modal-action">
           <label for="my_modal_6" class="btn">Close!</label>
+        </div>
+      </div>
+      <div class="modal-box w-10/12 max-w-4xl" v-else>
+        <h3 class="text-lg border border-primary rounded-md p-4 text-center font-bold">{{ quiz.questions[0].question }}</h3>
+        <div class="py-2 space-y-4">
+           <div v-for="quest in quiz.questions[0].options" class="btn h-14 flex justify-center items-center rounded-2xl shadow-md hover:scale-95">
+                <p class="text-2xl">{{ quest }}</p>
+            </div>
+        </div>
+        <div class="modal-action">
+          <form method="dialog">
+            <!-- if there is a button, it will close the modal -->
+            <!-- <button class="btn">Close</button> -->
+          </form>
         </div>
       </div>
     </div>
@@ -109,14 +126,26 @@
 
 <script setup>
 import { ref } from "vue";
-import { RouterLink } from "vue-router";
 import QrCodeReader from "../pages/QrCodeReader.vue";
 
 function exec(e) {
   qrState.value = e.target.checked;
 }
 
+function loadQuestions(data) {
+  qrState.value = false;
+}
+
 const qrState = ref(false);
+
+const quiz = ref({
+  questions: [
+    {
+      question: "What is the capital of Australia?",
+      options: ["Sydney", "Melbourne", "Canberra", "Brisbane"]
+    },
+  ]
+});
 
 // const items = ref([
 //   {
