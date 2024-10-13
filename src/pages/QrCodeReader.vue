@@ -1,9 +1,5 @@
 <template>
   <div>
-    <p class="decode-result">
-      Last result: <b>{{ result }}</b>
-    </p>
-
     <qrcode-stream
       :paused="paused"
       @detect="onDetect"
